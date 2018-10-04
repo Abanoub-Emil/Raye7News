@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.champion.bero.raye7news.Model.Articles;
 import com.champion.bero.raye7news.R;
@@ -23,11 +25,13 @@ public class FavoritesActivity extends AppCompatActivity {
     private FavoriteArticleAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Articles> favoriteArticles;
+    private TextView noListAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
+        noListAvailable = findViewById(R.id.favo_sorry);
         mRecyclerView = findViewById(R.id.favo_rv);
         getFavoriteArticles();
 
@@ -38,6 +42,8 @@ public class FavoritesActivity extends AppCompatActivity {
         if (favoriteArticles != null){
             adapter = new FavoriteArticleAdapter(getApplicationContext(), favoriteArticles);
             mRecyclerView.setAdapter(adapter);
+        }else{
+            noListAvailable.setVisibility(View.VISIBLE);
         }
     }
 

@@ -11,4 +11,5 @@ import java.util.HashMap;
 public interface NewsActivityInt {
 
     void setSortedArticles(HashMap<String, ArrayList<Articles>> sortedArticles);
+    void showCheckInternetText();
 }

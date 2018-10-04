@@ -51,7 +51,7 @@ public class NewsPresenter implements NewsPresenterInt{
 
                 @Override
                 public void onFailure(Call<MyResponse> call, Throwable t) {
-
+                    newsView.showCheckInternetText();
                 }
             },page);
 

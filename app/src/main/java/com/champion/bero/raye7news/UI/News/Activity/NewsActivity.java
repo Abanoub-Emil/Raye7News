@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.champion.bero.raye7news.Model.Articles;
@@ -29,20 +31,27 @@ public class NewsActivity extends AppCompatActivity implements NewsActivityInt {
     RecyclerView recyclerView;
     private boolean isFirstRequest = true;
     private boolean isRequesting = false;
+    private TextView noListAvailable;
     HashMap<String, ArrayList<Articles>> sortedArticles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+        noListAvailable = findViewById(R.id.main_sorry);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         newsPresenter = new NewsPresenter(this);
-        newsPresenter.requestData(page);
 
-        detectReachingBottom();
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        newsPresenter.requestData(page);
+        detectReachingBottom();
+    }
 
     @Override
     public void setSortedArticles(HashMap<String, ArrayList<Articles>> sortedArticles) {
@@ -51,19 +60,25 @@ public class NewsActivity extends AppCompatActivity implements NewsActivityInt {
         SectionedRecyclerViewAdapter sectionAdapter = new SectionedRecyclerViewAdapter();
 
         for (Map.Entry<String, ArrayList<Articles>> entry : sortedArticles.entrySet()) {
-
-            sectionAdapter.addSection(new MySection(entry.getKey(), entry.getValue(), getApplicationContext()));
+            sectionAdapter.addSection(new MySection(entry.getKey(),
+                                      entry.getValue(),
+                                      getApplicationContext()));
         }
 
+        noListAvailable.setVisibility(View.INVISIBLE);
         if(isFirstRequest){
             recyclerView.setAdapter(sectionAdapter);
             isFirstRequest = false;
         }else{
-
             sectionAdapter.notifyDataSetChanged();
             isRequesting = false;
         }
 
+    }
+
+    @Override
+    public void showCheckInternetText() {
+        noListAvailable.setVisibility(View.VISIBLE);
     }
 
     private void detectReachingBottom(){
